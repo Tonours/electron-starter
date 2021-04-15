@@ -2,7 +2,6 @@
   "name": "app-renderer",
   "version": "0.0.0",
   "description": "Electron-starter renderer",
-  "private": true,
   "homepage": "./",
   "dependencies": {
     "react": "^17.0.1",
