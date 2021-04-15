@@ -1,6 +1,6 @@
 {
   "name": "@utils/eslint-config",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Electron-starter linter configuration",
   "author": "Anthony Guimard <bonjour@anthonyguimard.fr>",
   "homepage": "",
@@ -13,7 +13,7 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
-    "@utils/prettier-config": "^0.1.0",
+    "@utils/prettier-config": "^0.2.0",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1"

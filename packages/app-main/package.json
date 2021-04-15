@@ -1,6 +1,6 @@
 {
   "name": "app-main",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Electron starter main process",
   "author": "Anthony Guimard <bonjour@anthonyguimard.fr>",
   "homepage": "",
@@ -21,8 +21,8 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
-    "@utils/eslint-config": "^0.1.0",
-    "@utils/prettier-config": "^0.1.0",
+    "@utils/eslint-config": "^0.2.0",
+    "@utils/prettier-config": "^0.2.0",
     "copyfiles": "^2.4.1",
     "electron": "11.3.0",
     "electron-builder": "^22.9.1",
