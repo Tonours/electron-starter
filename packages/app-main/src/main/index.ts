@@ -7,8 +7,9 @@ import ExampleService from './services/example';
 const ELECTRON_LOCAL_URL = 'http://localhost:3000';
 
 let mainWindow: BrowserWindow;
+const preloadPath = app.isPackaged || process.platform === 'darwin' ? process.resourcesPath : process.cwd();
 
-const preload = path.resolve(path.join(process.cwd(), 'preload', 'dist'), 'index.js');
+const preload = path.resolve(path.join(preloadPath, 'preload', 'dist'), 'index.js');
 
 const createMainWindow = () => {
   if (mainWindow) {
@@ -30,7 +31,7 @@ const createMainWindow = () => {
   });
 
   mainWindow.loadURL(
-    process.env.NODE_ENV === 'development'
+    !app.isPackaged
       ? ELECTRON_LOCAL_URL
       : url.format({
           pathname: path.join(__dirname, '../static/build/index.html'),
@@ -39,7 +40,7 @@ const createMainWindow = () => {
         }),
   );
 
-  if (process.env.NODE_ENV === 'development') {
+  if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
 

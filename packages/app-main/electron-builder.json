@@ -8,5 +8,5 @@
     "output": "binaries",
     "app": "."
   },
-  "extraFiles": ["preload/dist/index.js"]
+  "extraResources": ["preload/dist/index.js"]
 }
