@@ -7,7 +7,7 @@ import ExampleService from './services/example';
 const ELECTRON_LOCAL_URL = 'http://localhost:3000';
 
 let mainWindow: BrowserWindow;
-const preloadPath = app.isPackaged || process.platform === 'darwin' ? process.resourcesPath : process.cwd();
+const preloadPath = app.isPackaged ? process.resourcesPath : process.cwd();
 
 const preload = path.resolve(path.join(preloadPath, 'preload', 'dist'), 'index.js');
 
