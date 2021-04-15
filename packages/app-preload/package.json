@@ -14,8 +14,8 @@
     "src"
   ],
   "scripts": {
-    "build": "cross-env NODE_ENV=production tsc ./src/index.ts --outDir dist/",
-    "package": "npm run build",
+    "build": "tsc ./src/index.ts --outDir dist/",
+    "package": "cross-env NODE_ENV=production npm run build",
     "lint": "eslint ./src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
     "precommit": "lint-staged",

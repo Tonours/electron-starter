@@ -9,11 +9,12 @@
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "copyfiles -u 2 \"../app-renderer/build/**/*\" static/ && copyfiles -u 2 \"../app-preload/dist/**/*\" preload/",
-    "build": "cross-env NODE_ENV=production tsc ./src/main/index.ts --outDir dist/",
+    "build": "tsc ./src/main/index.ts --outDir dist/",
     "precommit": "lint-staged",
     "electron": "electron dist/index.js",
     "lint": "eslint ./src/**/*.ts",
     "lint:fix": "npm run lint -- --fix",
+    "prepackage": "cross-env NODE_ENV=production npm run build",
     "package": "cross-env NODE_ENV=production electron-builder",
     "start": "wait-on http-get://localhost:3000/ && tsc ./src/main/index.ts --outDir dist/ && nodemon --watch ./src/main/index.ts --exec \"tsc ./src/main/index.ts --outDir dist/ && electron . \"",
     "test": "echo @todo",
