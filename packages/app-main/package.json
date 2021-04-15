@@ -1,0 +1,35 @@
+{
+  "name": "app-main",
+  "version": "0.0.0",
+  "description": "Electron starter main process",
+  "author": "Anthony Guimard <bonjour@anthonyguimard.fr>",
+  "homepage": "",
+  "license": "ISC",
+  "prettier": "@utils/prettier-config",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "copyfiles -u 2 \"../app-renderer/build/**/*\" static/ && copyfiles -u 2 \"../app-preload/dist/**/*\" preload/",
+    "build": "cross-env NODE_ENV=production tsc ./src/main/index.ts --outDir dist/",
+    "precommit": "lint-staged",
+    "electron": "electron dist/index.js",
+    "lint": "eslint ./src/**/*.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "package": "cross-env NODE_ENV=production electron-builder",
+    "start": "wait-on http-get://localhost:3000/ && tsc ./src/main/index.ts --outDir dist/ && nodemon --watch ./src/main/index.ts --exec \"tsc ./src/main/index.ts --outDir dist/ && electron . \"",
+    "test": "echo @todo",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "devDependencies": {
+    "@utils/eslint-config": "^0.0.0",
+    "@utils/prettier-config": "^0.0.0",
+    "copyfiles": "^2.4.1",
+    "electron": "11.3.0",
+    "electron-builder": "^22.9.1",
+    "lint-staged": "^10.5.4",
+    "nodemon": "^2.0.7",
+    "wait-on": "^5.3.0"
+  },
+  "dependencies": {
+    "source-map-support": "^0.5.19"
+  }
+}

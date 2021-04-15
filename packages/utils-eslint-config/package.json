@@ -1,0 +1,21 @@
+{
+  "name": "@utils/eslint-config",
+  "version": "0.0.0",
+  "description": "Electron-starter linter configuration",
+  "author": "Anthony Guimard <bonjour@anthonyguimard.fr>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.15.2",
+    "@typescript-eslint/parser": "^4.15.2",
+    "@utils/prettier-config": "^0.0.0",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1"
+  }
+}

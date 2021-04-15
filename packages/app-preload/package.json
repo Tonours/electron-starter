@@ -1,0 +1,30 @@
+{
+  "name": "app-preload",
+  "version": "0.0.0",
+  "description": "Electron-starter preload",
+  "author": "Anthony Guimard <bonjour@anthonyguimard.fr>",
+  "homepage": "",
+  "license": "ISC",
+  "prettier": "@utils/prettier-config",
+  "main": "src/index.ts",
+  "directories": {
+    "src": "src"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_ENV=production tsc ./src/index.ts --outDir dist/",
+    "package": "npm run build",
+    "lint": "eslint ./src/**/*.ts",
+    "lint:fix": "npm run lint -- --fix",
+    "precommit": "lint-staged",
+    "start": "cross-env NODE_ENV=development tsc ./src/index.ts --outDir dist/ -w --preserveWatchOutput",
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  },
+  "devDependencies": {
+    "@utils/eslint-config": "^0.0.0",
+    "@utils/prettier-config": "^0.0.0",
+    "lint-staged": "^10.5.4"
+  }
+}

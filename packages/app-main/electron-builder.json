@@ -1,0 +1,12 @@
+{
+  "appId": "com.electron-starter.app",
+  "extends": null,
+  "files": ["!binaries", "!node_modules", "static/build/**/*", "dist/**/*"],
+  "productName": "Electron-Starter",
+  "electronVersion": "11.3.0",
+  "directories": {
+    "output": "binaries",
+    "app": "."
+  },
+  "extraFiles": ["preload/dist/index.js"]
+}
