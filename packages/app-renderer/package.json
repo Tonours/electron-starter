@@ -1,6 +1,6 @@
 {
   "name": "app-renderer",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Electron-starter renderer",
   "homepage": "./",
   "dependencies": {
@@ -33,8 +33,6 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.3",
-    "lint-staged": "^10.5.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -42,6 +40,8 @@
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "cross-env": "^7.0.3",
+    "lint-staged": "^10.5.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",

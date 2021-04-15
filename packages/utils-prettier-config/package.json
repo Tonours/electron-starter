@@ -1,6 +1,6 @@
 {
   "name": "@utils/prettier-config",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Electron-starter prettier configuration",
   "author": "Anthony Guimard <bonjour@anthonyguimard.fr>",
   "homepage": "",
