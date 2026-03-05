@@ -1,42 +1,34 @@
 import path from 'node:path';
-import { app, BrowserWindow } from 'electron';
+import { BrowserWindow } from 'electron';
 import { getBrowserWindowOptions } from '../security/config';
 import { applyNavigationGuard } from '../security/navigationGuard';
+import { resolveRendererEntry } from '../security/rendererEntry';
+import { incrementErrorMetric } from '../services/errorMetrics';
 import { logger } from '../services/logger';
-
-type RendererEntry = {
-  entryUrl: string;
-  allowedHttpOrigins: string[];
-  allowFileProtocol: boolean;
-};
-
-const resolveRendererEntry = (): RendererEntry => {
-  const devUrl = process.env.VITE_DEV_SERVER_URL;
-  if (!app.isPackaged && devUrl) {
-    return {
-      entryUrl: devUrl,
-      allowedHttpOrigins: [new URL(devUrl).origin],
-      allowFileProtocol: false,
-    };
-  }
-
-  const fileEntry = `file://${path.resolve(__dirname, '..', 'renderer', 'index.html')}`;
-  return {
-    entryUrl: fileEntry,
-    allowedHttpOrigins: [],
-    allowFileProtocol: true,
-  };
-};
 
 export const createMainWindow = (): BrowserWindow => {
   const preloadFile = path.resolve(__dirname, '..', 'preload', 'index.cjs');
   const window = new BrowserWindow(getBrowserWindowOptions(preloadFile));
-
   const rendererEntry = resolveRendererEntry();
+
   void window.loadURL(rendererEntry.entryUrl).catch((error: unknown) => {
     logger.error('Failed to load renderer entry', {
       entryUrl: rendererEntry.entryUrl,
       error: error instanceof Error ? error.message : 'Unknown loadURL error',
+    });
+  });
+
+  window.webContents.on('unresponsive', () => {
+    const count = incrementErrorMetric('process.unresponsive');
+    logger.warn('Renderer became unresponsive', {
+      windowId: window.id,
+      count,
+    });
+  });
+
+  window.webContents.on('responsive', () => {
+    logger.info('Renderer became responsive again', {
+      windowId: window.id,
     });
   });
 
@@ -46,7 +38,7 @@ export const createMainWindow = (): BrowserWindow => {
 
   applyNavigationGuard(window, {
     allowedHttpOrigins: rendererEntry.allowedHttpOrigins,
-    allowFileProtocol: rendererEntry.allowFileProtocol,
+    allowedFilePath: rendererEntry.allowedFilePath,
   });
 
   return window;

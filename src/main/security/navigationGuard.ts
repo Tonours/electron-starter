@@ -1,4 +1,4 @@
-import { URL } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 import { type BrowserWindow, session } from 'electron';
 
 export const configureSessionSecurity = (): void => {
@@ -11,7 +11,7 @@ export const configureSessionSecurity = (): void => {
 
 type NavigationGuardOptions = {
   allowedHttpOrigins: string[];
-  allowFileProtocol: boolean;
+  allowedFilePath: string | null;
 };
 
 const isAllowedNavigation = (
@@ -19,7 +19,15 @@ const isAllowedNavigation = (
   options: NavigationGuardOptions
 ): boolean => {
   if (target.protocol === 'file:') {
-    return options.allowFileProtocol;
+    if (options.allowedFilePath === null) {
+      return false;
+    }
+
+    try {
+      return fileURLToPath(target) === options.allowedFilePath;
+    } catch {
+      return false;
+    }
   }
 
   if (target.protocol === 'http:' || target.protocol === 'https:') {
@@ -35,7 +43,7 @@ export const applyNavigationGuard = (
 ): void => {
   const guardedOptions = {
     allowedHttpOrigins: [...new Set(options.allowedHttpOrigins)],
-    allowFileProtocol: options.allowFileProtocol,
+    allowedFilePath: options.allowedFilePath,
   };
 
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
