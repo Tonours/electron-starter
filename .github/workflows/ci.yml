@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+  push:
+    branches:
+      - migration/electron-2026
+    paths-ignore:
+      - "**/*.md"
+      - "docs/**"
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality-gate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      # CI build simple uniquement: pas de signature/notarisation pour l'instant.
+      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      # Optimisation cout/temps: inutile en CI quality gate.
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Quality gate + build (no code-signing)
+        run: pnpm gate:ci
