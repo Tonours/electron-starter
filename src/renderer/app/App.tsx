@@ -6,7 +6,7 @@ type StatusTone = 'idle' | 'success' | 'error';
 
 export const App = (): ReactElement => {
   const [status, setStatus] = useState<{ label: string; tone: StatusTone }>({
-    label: 'En attente',
+    label: 'Waiting',
     tone: 'idle'
   });
   const [loading, setLoading] = useState(false);
@@ -21,7 +21,7 @@ export const App = (): ReactElement => {
       });
     } catch {
       setStatus({
-        label: 'ERREUR',
+        label: 'ERROR',
         tone: 'error'
       });
     } finally {
@@ -33,9 +33,9 @@ export const App = (): ReactElement => {
     <main className={container()}>
       <section className={card()}>
         <h1 className="text-2xl font-bold tracking-tight">Electron Starter</h1>
-        <p className={statusBadge({ tone: status.tone })}>Statut: {status.label}</p>
+        <p className={statusBadge({ tone: status.tone })}>Status: {status.label}</p>
         <button className={pingButton({ loading })} onClick={() => void handlePing()} disabled={loading}>
-        {loading ? '...' : 'Ping'}
+          {loading ? 'Loading...' : 'Ping'}
         </button>
       </section>
     </main>

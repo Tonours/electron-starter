@@ -12,10 +12,10 @@ test('Ping button returns PONG from main process', async () => {
   const page = await app.firstWindow();
 
   await expect(page.getByRole('heading', { name: 'Electron Starter' })).toBeVisible();
-  await expect(page.getByText('Statut: En attente')).toBeVisible();
+  await expect(page.getByText('Status: Waiting')).toBeVisible();
 
   await page.getByRole('button', { name: 'Ping' }).click();
-  await expect(page.getByText('Statut: PONG')).toBeVisible();
+  await expect(page.getByText('Status: PONG')).toBeVisible();
 
   await app.close();
 });

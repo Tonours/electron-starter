@@ -33,14 +33,14 @@ export const toErrorPayload = (error: unknown): ErrorPayload => {
   if (error instanceof Error) {
     return {
       code: 'INTERNAL_ERROR',
-      message: 'Une erreur interne est survenue.',
+      message: 'An internal error occurred.',
       retryable: false
     };
   }
 
   return {
     code: 'UNKNOWN_ERROR',
-    message: 'Une erreur inconnue est survenue.',
+    message: 'An unknown error occurred.',
     retryable: false
   };
 };
