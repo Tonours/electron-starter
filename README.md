@@ -60,3 +60,6 @@ tests/e2e     # Playwright Electron scenario
 
 - `sandbox` is currently disabled in BrowserWindow config to keep preload IPC behavior stable in this starter setup.
 - CI is intentionally limited to a standard quality/build pipeline (no code-signing yet).
+- Crash reporter upload is disabled by default. Configure with:
+  - `CRASH_REPORTER_UPLOAD=1`
+  - `CRASH_REPORTER_SUBMIT_URL=https://your-endpoint.example.com`
