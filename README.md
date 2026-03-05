@@ -1,13 +1,21 @@
 # Electron Starter
 
-Minimal Electron + React + TypeScript starter with:
+Electron + React + TypeScript starter focused on secure IPC defaults and
+runtime resilience.
 
-- typed IPC contract (`ping -> pong`)
-- secure preload bridge (`contextIsolation: true`, `nodeIntegration: false`)
+## Included in this codebase
+
+- React 19 renderer (Vite 7 + TypeScript 5)
+- Shared IPC contracts in `src/shared/ipc/*` with Zod request/response schemas
+- Validated IPC handlers in main (`validatedHandle`) with standardized error
+  envelopes
+- Trusted IPC sender checks + navigation guard (`window.open` denied, external
+  navigation blocked unless explicitly allowed)
+- Preload bridge with fatal error reporting channel
+- Main-process fatal error policy + renderer crash recovery hooks
 - Tailwind CSS v4 + `tailwind-variants`
-- unit tests (Vitest) and Electron e2e (Playwright)
-- Biome for linting + Prettier for formatting
-- GitHub Actions quality gate (lint, typecheck, unit tests, build)
+- Unit tests (Vitest) and Electron e2e test (Playwright)
+- CI quality gate (`pnpm gate:ci`)
 
 ## Requirements
 
@@ -20,7 +28,7 @@ Minimal Electron + React + TypeScript starter with:
 pnpm install
 ```
 
-## Run in development
+## Development
 
 ```bash
 pnpm dev
@@ -33,33 +41,34 @@ pnpm gate      # lint + typecheck + unit tests
 pnpm test:e2e  # build + Electron Playwright scenario
 ```
 
-## Build
+## Build, run, package
 
 ```bash
 pnpm build
-```
-
-## Package (macOS example, no code-signing)
-
-```bash
+pnpm start
 pnpm package:mac
 ```
+
+## Environment variables
+
+- `CRASH_REPORTER_UPLOAD=1` to enable crash report upload
+- `CRASH_REPORTER_SUBMIT_URL=https://your-endpoint.example.com` to define the
+  upload endpoint
 
 ## Project structure
 
 ```text
-src/main      # Electron main process
-src/preload   # secure bridge exposed to renderer
+src/main      # Electron main process (bootstrap, IPC, security, lifecycle)
+src/preload   # contextBridge API and preload fatal reporting
 src/renderer  # React UI
-src/shared    # shared IPC contracts and schemas
+src/shared    # IPC channels, contracts, schemas, shared types
 tests/unit    # Vitest unit tests
 tests/e2e     # Playwright Electron scenario
+docs          # release/review checklists and migration notes
 ```
 
 ## Notes
 
-- `sandbox` is currently disabled in BrowserWindow config to keep preload IPC behavior stable in this starter setup.
-- CI is intentionally limited to a standard quality/build pipeline (no code-signing yet).
-- Crash reporter upload is disabled by default. Configure with:
-  - `CRASH_REPORTER_UPLOAD=1`
-  - `CRASH_REPORTER_SUBMIT_URL=https://your-endpoint.example.com`
+- `sandbox` is currently disabled in `BrowserWindow` config.
+- Crash reporter starts at boot, but upload is disabled by default.
+- CI currently runs lint + typecheck + unit tests + build (no code-signing).
