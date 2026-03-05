@@ -5,3 +5,7 @@ playwright-report
 test-results
 node_modules
 pnpm-lock.yaml
+docs
+PLAN_MIGRATION_ELECTRON_2026.md
+RFC_ELECTRON_2026.md
+src/renderer/app/styles.css

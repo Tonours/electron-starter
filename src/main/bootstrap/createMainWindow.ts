@@ -2,6 +2,7 @@ import path from 'node:path';
 import { app, BrowserWindow } from 'electron';
 import { getBrowserWindowOptions } from '../security/config';
 import { applyNavigationGuard } from '../security/navigationGuard';
+import { logger } from '../services/logger';
 
 type RendererEntry = {
   entryUrl: string;
@@ -32,7 +33,12 @@ export const createMainWindow = (): BrowserWindow => {
   const window = new BrowserWindow(getBrowserWindowOptions(preloadFile));
 
   const rendererEntry = resolveRendererEntry();
-  void window.loadURL(rendererEntry.entryUrl);
+  void window.loadURL(rendererEntry.entryUrl).catch((error: unknown) => {
+    logger.error('Failed to load renderer entry', {
+      entryUrl: rendererEntry.entryUrl,
+      error: error instanceof Error ? error.message : 'Unknown loadURL error',
+    });
+  });
 
   window.once('ready-to-show', () => {
     window.show();

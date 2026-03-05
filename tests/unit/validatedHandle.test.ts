@@ -1,7 +1,17 @@
 import { AppError } from '@main/ipc/error';
 import { executeValidated } from '@main/ipc/executeValidated';
+import { logger } from '@main/services/logger';
 import { contracts } from '@shared/ipc/contracts';
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+beforeEach(() => {
+  vi.spyOn(logger, 'warn').mockImplementation(() => undefined);
+  vi.spyOn(logger, 'error').mockImplementation(() => undefined);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('executeValidated', () => {
   it('returns pong when handler succeeds', async () => {

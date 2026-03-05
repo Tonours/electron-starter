@@ -3,14 +3,14 @@ name: ci
 on:
   pull_request:
     paths-ignore:
-      - "**/*.md"
-      - "docs/**"
+      - '**/*.md'
+      - 'docs/**'
   push:
     branches:
       - main
     paths-ignore:
-      - "**/*.md"
-      - "docs/**"
+      - '**/*.md'
+      - 'docs/**'
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -23,10 +23,10 @@ jobs:
       contents: read
     env:
       # CI build simple uniquement: pas de signature/notarisation pour l'instant.
-      CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       # Optimisation cout/temps: inutile en CI quality gate.
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
-      ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
 
     steps:
       - name: Checkout

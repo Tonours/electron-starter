@@ -1,15 +1,10 @@
-import type { IpcContract } from '@shared/ipc/contracts';
+import type {
+  IpcContract,
+  SuccessDataFromContract,
+} from '@shared/ipc/contracts';
 import type { ZodTypeAny, z } from 'zod';
 import { logger } from '../services/logger';
 import { toErrorPayload } from './error';
-
-type SuccessDataFromContract<
-  Contract extends IpcContract<ZodTypeAny, ZodTypeAny>,
-> = Contract['responseSchema']['_output'] extends infer Response
-  ? Extract<Response, { ok: true }> extends { data: infer SuccessData }
-    ? SuccessData
-    : never
-  : never;
 
 export const executeValidated = async <
   Contract extends IpcContract<ZodTypeAny, ZodTypeAny>,
@@ -27,10 +22,19 @@ export const executeValidated = async <
     return contract.responseSchema.parse(response);
   } catch (error) {
     const safeError = toErrorPayload(error);
-    logger.error('IPC handler failed', {
+    const meta = {
       channel: contract.channel,
       code: safeError.code,
-    });
+    };
+
+    if (
+      safeError.code === 'INTERNAL_ERROR' ||
+      safeError.code === 'UNKNOWN_ERROR'
+    ) {
+      logger.error('IPC handler failed', meta);
+    } else {
+      logger.warn('IPC handler rejected request', meta);
+    }
 
     return contract.responseSchema.parse({
       ok: false as const,

@@ -1,6 +1,7 @@
 # Electron Starter
 
 Minimal Electron + React + TypeScript starter with:
+
 - typed IPC contract (`ping -> pong`)
 - secure preload bridge (`contextIsolation: true`, `nodeIntegration: false`)
 - Tailwind CSS v4 + `tailwind-variants`

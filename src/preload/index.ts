@@ -1,13 +1,11 @@
-import { contracts, type ResponseEnvelopeOf } from '@shared/ipc/contracts';
+import { contracts } from '@shared/ipc/contracts';
 import type { RendererApi } from '@shared/ipc/types';
 import { contextBridge, ipcRenderer } from 'electron';
 
 const api: RendererApi = {
   ping: async () => {
-    const response = (await ipcRenderer.invoke(
-      contracts.ping.channel,
-      {}
-    )) as ResponseEnvelopeOf<'ping'>;
+    const rawResponse = await ipcRenderer.invoke(contracts.ping.channel, {});
+    const response = contracts.ping.responseSchema.parse(rawResponse);
 
     if (!response.ok) {
       throw new Error(`${response.error.code}: ${response.error.message}`);

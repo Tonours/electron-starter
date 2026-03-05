@@ -38,3 +38,11 @@ export type SuccessResponseDataOf<K extends ContractKey> = Extract<
   ResponseEnvelopeOf<K>,
   { ok: true }
 >['data'];
+
+export type SuccessDataFromContract<
+  Contract extends IpcContract<ZodTypeAny, ZodTypeAny>,
+> = Contract['responseSchema']['_output'] extends infer Response
+  ? Extract<Response, { ok: true }> extends { data: infer SuccessData }
+    ? SuccessData
+    : never
+  : never;
