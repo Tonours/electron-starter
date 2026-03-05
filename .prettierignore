@@ -1,0 +1,7 @@
+dist
+coverage
+release
+playwright-report
+test-results
+node_modules
+pnpm-lock.yaml

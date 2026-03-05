@@ -1,24 +1,61 @@
-# Electron-starter
+# Electron Starter
 
-Basic boilerplate for electron using Lerna, React (CRA), Typescript and other stuff
+Minimal Electron + React + TypeScript starter with:
+- typed IPC contract (`ping -> pong`)
+- secure preload bridge (`contextIsolation: true`, `nodeIntegration: false`)
+- Tailwind CSS v4 + `tailwind-variants`
+- unit tests (Vitest) and Electron e2e (Playwright)
+- Biome for linting + Prettier for formatting
+- GitHub Actions quality gate (lint, typecheck, unit tests, build)
 
-## Installation
+## Requirements
+
+- Node.js `>=22`
+- pnpm `>=9`
+
+## Install
 
 ```bash
-lerna bootstrap
+pnpm install
 ```
 
-## Usage
+## Run in development
 
 ```bash
-yarn start # run dev env
-yarn build # build all stuff
-yarn package # package app
-yarn electron # run electron
+pnpm dev
 ```
 
-## Contributing
-tbd
+## Quality and tests
 
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+```bash
+pnpm gate      # lint + typecheck + unit tests
+pnpm test:e2e  # build + Electron Playwright scenario
+```
+
+## Build
+
+```bash
+pnpm build
+```
+
+## Package (macOS example, no code-signing)
+
+```bash
+pnpm package:mac
+```
+
+## Project structure
+
+```text
+src/main      # Electron main process
+src/preload   # secure bridge exposed to renderer
+src/renderer  # React UI
+src/shared    # shared IPC contracts and schemas
+tests/unit    # Vitest unit tests
+tests/e2e     # Playwright Electron scenario
+```
+
+## Notes
+
+- `sandbox` is currently disabled in BrowserWindow config to keep preload IPC behavior stable in this starter setup.
+- CI is intentionally limited to a standard quality/build pipeline (no code-signing yet).

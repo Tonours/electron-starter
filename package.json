@@ -1,43 +1,86 @@
 {
   "name": "electron-starter",
+  "version": "0.1.0",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "**/electron-builder",
-      "**/electron-builder/**"
-    ]
-  },
-  "lint-staged": {
-    "**/src/**/**.{ts,tsx}": [
-      "prettier --write",
-      "eslint --fix"
-    ]
-  },
+  "description": "Classic Electron starter with secure IPC ping/pong",
+  "main": "dist/main/index.cjs",
+  "type": "module",
   "scripts": {
-    "build": "lerna run build --stream --ignore utils-*",
-    "preelectron": "yarn build",
-    "electron": "lerna run electron --scope app-main",
-    "lint": "lerna run lint --parallel --stream --ignore utils-*",
-    "prepackage": "yarn build",
-    "package": "lerna run package --scope app-main --stream",
-    "postinstall": "husky install",
-    "start": "concurrently \"yarn --cwd packages/app-renderer start\" \"yarn --cwd packages/app-preload start\" \"yarn --cwd packages/app-main start\"",
-    "test": "lerna run test --parallel"
+    "clean": "rimraf dist coverage playwright-report test-results",
+    "dev": "concurrently -k -n RENDERER,ELECTRON \"pnpm dev:renderer\" \"pnpm dev:electron\"",
+    "dev:renderer": "vite",
+    "dev:electron": "concurrently -k -n MAIN,PRELOAD,APP \"pnpm watch:main\" \"pnpm watch:preload\" \"pnpm dev:app\"",
+    "dev:app": "wait-on tcp:5173 dist/main/index.cjs dist/preload/index.cjs && VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electronmon --trace-warnings dist/main/index.cjs",
+    "watch:main": "tsup src/main/index.ts --format cjs --platform node --target node22 --sourcemap --out-dir dist/main --external electron --watch",
+    "watch:preload": "tsup src/preload/index.ts --format cjs --platform node --target node22 --sourcemap --out-dir dist/preload --external electron --watch",
+    "build": "pnpm clean && pnpm build:renderer && pnpm build:main && pnpm build:preload",
+    "build:renderer": "vite build",
+    "build:main": "tsup src/main/index.ts --format cjs --platform node --target node22 --sourcemap --out-dir dist/main --external electron",
+    "build:preload": "tsup src/preload/index.ts --format cjs --platform node --target node22 --sourcemap --out-dir dist/preload --external electron",
+    "start": "electron dist/main/index.cjs",
+    "lint": "biome check .",
+    "lint:fix": "biome check . --write",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:ci": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "pnpm build && playwright test",
+    "gate": "pnpm lint && pnpm typecheck && pnpm test",
+    "gate:ci": "pnpm lint && pnpm typecheck && pnpm test:ci && pnpm build",
+    "package:mac": "pnpm build && electron-builder --mac --publish never",
+    "prepare": "husky"
   },
-  "engines": {
-    "yarn": "^1.22.10"
+  "build": {
+    "appId": "com.electron.starter",
+    "productName": "Electron Starter",
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false
+    },
+    "directories": {
+      "output": "release"
+    }
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwind-variants": "^3.2.2",
+    "zod": "^4.1.5"
   },
   "devDependencies": {
-    "@commitlint/cli": "^12.0.1",
-    "@commitlint/config-conventional": "^12.0.1",
-    "@commitlint/config-lerna-scopes": "^12.0.1",
-    "@types/node": "^14.14.31",
-    "concurrently": "^6.0.2",
-    "husky": "^5.1.1",
-    "lerna": "^4.0.0",
-    "lint-staged": "^10.5.4"
+    "@biomejs/biome": "^2.2.6",
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.1",
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "@tailwindcss/vite": "^4.0.0",
+    "@vitejs/plugin-react": "^5.0.2",
+    "concurrently": "^9.2.1",
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12",
+    "electronmon": "^2.0.3",
+    "husky": "^9.1.7",
+    "playwright": "^1.55.0",
+    "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
+    "tailwindcss": "^4.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3",
+    "vitest": "^3.2.4",
+    "wait-on": "^8.0.4"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
   }
 }
